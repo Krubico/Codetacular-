@@ -7,7 +7,7 @@ const db = admin.firestore();
 //ENDPOINT AUTHENTICATE//
 exports.authenticate = functions.https.onRequest((req, res) => {
     try {
-        if (req.method == "POST") {
+        if (req.method === "POST") {
             //Check if required keys are present
             const singpassID = req.body["singpassID"];
             const password = req.body["password"];
@@ -38,7 +38,7 @@ exports.authenticate = functions.https.onRequest((req, res) => {
                 //check if user is supervisor
                 snapshot.docs.forEach(doc=>{
                     isSupervisor = doc.data()["isSupervisor"]
-                });
+                }); 
 
                 res.status(200).json({
                     "authStatus": (isSupervisor) ? "supervisor" :"nsmen"
@@ -54,6 +54,7 @@ exports.authenticate = functions.https.onRequest((req, res) => {
         }
 
     } catch (err) {
+        //we do not know what went wrong, send back 500
         res.status(500).send('Internal Server Error');
         console.log(err);
         return;
@@ -64,7 +65,7 @@ exports.authenticate = functions.https.onRequest((req, res) => {
 //ENDPOINT GET TOTAL MILES//
 exports.totalMiles = functions.https.onRequest((req, res) => {
     try {
-        if (req.method == "GET") {
+        if (req.method === "GET") {
             //Check if required keys are present
             const singpassID = req.body["singpassID"];
             
@@ -99,6 +100,7 @@ exports.totalMiles = functions.https.onRequest((req, res) => {
         }
 
     } catch (err) {
+        //we do not know what went wrong, send back 500
         res.status(500).send('Internal Server Error');
         console.log(err);
         return;
