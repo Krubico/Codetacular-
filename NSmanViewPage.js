@@ -1,13 +1,22 @@
-import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
-import { Card, Title, Paragraph } from "react-native-paper";
+// import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Card, Title } from "react-native-paper";
 import { ProgressBar, Colors } from "react-native-paper";
+
+var student1 = {
+  name: "John",
+  currentKilo: "18km",
+  toLicense: "20km",
+  dateTime: "12/8/2022 4.45pm",
+  recentRecord: "2km",
+  Supervisor: "Andy",
+};
 
 export default function NSmanViewPage() {
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 40 }}>Hello (Name)</Text>
+      <Text style={{ fontSize: 40 }}>Hello</Text>
       <Card
         style={{
           height: 110,
