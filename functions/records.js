@@ -13,13 +13,13 @@ async function userSnapshot(driverID) {
     console.log(err);
     return;
   }
-  }
+}
 
 exports.provideRecords = functions.https.onRequest((req, res) => {
   try {
     if (req.method === `GET`) {
       const singpassID = req.body.singpassID;
-      const totalNSFRecord = []
+      const totalNSFRecords = [];
       const records = db.collection('records');
       const users = db.collection('users');
 
@@ -51,11 +51,12 @@ exports.provideRecords = functions.https.onRequest((req, res) => {
           const singpassID = req.body.singpassID;
           //Possible Bug here with const
           const snapshot = async() => {
-                  await records.where('singpassID', '==', singpassID);
+                  await records.where('driverID', '==', singpassID).get();
               }
 
           snapshot.docs.forEach(doc => {
             totalNSFRecords.append({
+              supervisorName: doc.data()[`supervisorName`],
               date: doc.data()[`date`],
               miles: doc.data()[`miles`]
           })})
@@ -85,6 +86,7 @@ exports.provideRecords = functions.https.onCall((data, context) => {
       const records = db.collection(`records`);
 
       db.collection(`records`).add({
+        supervisorName: data.body.supervisorName,
         date: data.body.date,
         driverID: data.body.driverID,
         miles: data.body.miles,
