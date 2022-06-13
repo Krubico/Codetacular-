@@ -79,7 +79,7 @@ exports.provideRecords = functions.https.onRequest((req, res) => {
   }
 })
 
-exports.provideRecords = functions.https.onCall((data, context) => {
+exports.addRecords = functions.https.onCall((data, context) => {
   try {
     if (data.method === `POST`) {
 
