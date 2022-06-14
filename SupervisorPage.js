@@ -82,7 +82,7 @@ function SupervisorAdd() {
         <Text> Date:</Text>
         <TextInput
           style={{
-            height: 30,
+            height: 40,
             width: 220,
             margin: 5,
             backgroundColor: "lightgray",
@@ -92,10 +92,10 @@ function SupervisorAdd() {
           onChangeText={newText => setDate(newText)}
           defaultValue={date}
         />
-        <Text> Supervisor Name </Text>
+        <Text> Vechicle ID </Text>
         <TextInput
           style={{
-            height: 30,
+            height: 40,
             width: 220,
             margin: 5,
             backgroundColor: "lightgray",
@@ -110,7 +110,7 @@ function SupervisorAdd() {
         <Text> Driver's NS ID: </Text>
         <TextInput
           style={{
-            height: 30,
+            height: 40,
             width: 220,
             margin: 5,
             backgroundColor: "lightgray",
@@ -140,7 +140,7 @@ function SupervisorAdd() {
         <Text> Additional Comments: </Text>
         <TextInput
           style={{
-            height: 70,
+            height: 100,
             width: 270,
             margin: 5,
             backgroundColor: "lightgray",
@@ -152,7 +152,7 @@ function SupervisorAdd() {
           placeholder="Additional comments (150 words)"
         />
 
-        {/* <Text> Signature: </Text>
+        <Text> Signature: </Text>
       <TextInput
         style={{
           height: 60,
@@ -162,7 +162,7 @@ function SupervisorAdd() {
           padding: 10,
           borderWidth: 1,
         }}
-      /> */}
+      />
 
         <TouchableOpacity onPress={ButtonPressed}>
           <Text
@@ -183,44 +183,128 @@ function SupervisorAdd() {
   );
 }
 
-async function SupervisorHistory() {
-  var jsonResponse = "";
-  try {
-    const data = {
-      "singpassID": singpassID,
-  
-      "authStatus": authStatus,
-    };
-  
-    const response = await fetch(`http://44.232.66.213:443/records?authStatus=${encodeURIComponent(data.authStatus)}&singpassID=${encodeURIComponent(data.singpassID)}`, {
-      method: "GET",
-      headers: { 'Content-Type': 'application/json' },
-    })
-    
-    jsonResponse = await response.json();
-  } catch (error) {
-    console.error(error);
+class SupervisorHistory extends React.Component {
+
+  LoadedStatus = {
+    Status: false,
+  };
+
+  User = {
+    fullName: [],
+    date: [],
+    miles: [],
+    comments: [],
   }
 
+  constructor()
+  {
+    super();
+    console.warn("constructor");
+  }
+  async componentDidMount()
+  {
+    console.warn("componentDidMount");
+    try {
+      const data = {
+        "singpassID": singpassID,
+    
+        "authStatus": authStatus,
+      };
+    
+      const response = await fetch(`http://44.232.66.213:443/records?authStatus=${encodeURIComponent(data.authStatus)}&singpassID=${encodeURIComponent(data.singpassID)}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+      })
+      
+      const jsonResponse = await response.json();
+      var statusNum = response.status;
 
-  return (
-    <View
-      style={{ flex: 1, margin: 30 }}
-    >
-      <Text style={{ fontSize: 35 }}>Logs:</Text>  
-      {
-        jsonResponse.forEach(doc => {
-          <RecordCard
-            fullName={doc.fullName}
-            date={doc.data}
-            miles={doc.miles}
-            comments={doc.comments}
-          />
+      this.LoadedStatus.setState({
+        Status: true,
+      });
+
+      if (statusNum === 200) {
+
+        this.LoadedStatus.setState({
+          Status: true,
+        });
+
+        {jsonResponse.map(doc => {  
+          this.User.setState({
+            fullName: [...this.User.fullName, doc.fullName],
+            date: [...this.User.date, doc.date],
+            miles: [...this.User.miles, doc.miles],
+            comments: [...this.User.comments, doc.comments],
         })
-      }
-    </View>
-  );
+      })}
+    }
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+  }
+  render() {
+    console.warn("render");
+    return (
+      <View
+        style={{ flex: 1, margin: 30 }}
+      >
+        <Text style={{ fontSize: 35 }}>Logs:</Text>  
+        {
+          (this.LoadedStatus ? 
+            this.User.fullName.forEach((fullName, index) => {
+              <RecordCard 
+                fullName={this.User.fullName[index]}
+                date={this.User.date[index]}
+                miles={this.User.miles[index]}
+                comments={this.User.comments[index]}
+            />
+            })
+           : <Text>Loading</Text>)
+        }
+      </View>
+    );
+  }
 }
+
+// async function SupervisorHistory() {
+//   var jsonResponse = "";
+//   try {
+//     const data = {
+//       "singpassID": singpassID,
+  
+//       "authStatus": authStatus,
+//     };
+  
+//     const response = await fetch(`http://44.232.66.213:443/records?authStatus=${encodeURIComponent(data.authStatus)}&singpassID=${encodeURIComponent(data.singpassID)}`, {
+//       method: "GET",
+//       headers: { 'Content-Type': 'application/json' },
+//     })
+    
+//     jsonResponse = await response.json();
+//   } catch (error) {
+//     console.error(error);
+//   }
+
+//   return (
+//     <View
+//       style={{ flex: 1, margin: 30 }}
+//     >
+//       <Text style={{ fontSize: 35 }}>Logs:</Text>  
+//       {
+//         jsonResponse.forEach(doc => {
+//           <RecordCard
+//             fullName={doc.fullName}
+//             date={doc.data}
+//             miles={doc.miles}
+//             comments={doc.comments}
+//           />
+//         })
+//       }
+//     </View>
+//   );
+// }
 
 function RecordCard(props) {
   const date = () => {
@@ -228,7 +312,8 @@ function RecordCard(props) {
     const singaporeDate = new Date(unixTime);
     const stringDate = singaporeDate.toString;
     return stringDate;
-}
+  }
+  var dateString = date();
   return (
       <Card
       style={{
@@ -242,7 +327,7 @@ function RecordCard(props) {
       <Card.Content>
 
       <Title style={{ fontSize: 15, textAlign: "left" }}>
-            Date and Time: {date()}
+            Date and Time: {dateString}
           </Title>
           <Title style={{ fontSize: 15, textAlign: "left" }}>
             Vehicle ID: S102234R
@@ -275,4 +360,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
