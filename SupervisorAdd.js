@@ -68,11 +68,6 @@ function SupervisorAdd() {
         textBody: 'Opps, something went wrong when submitting your record. Please try again.',
         buttonText: 'Ok',
         callback: () => {
-          setDate("");
-          setDriverId("");
-          setVehicalId("");
-          setMiles("");
-          setComments("");
           Popup.hide()
         }
       })
