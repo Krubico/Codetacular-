@@ -1,35 +1,20 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableOpacity,
-  buttonPressed,
-} from "react-native";
+import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-// import * as React from "react";
-// import { NavigationContainer, StackActions } from "@react-navigation/native";
-// import NSmanViewPage from "./NSmanViewPage";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
-// const App = () => {
-//   return (
-//     <NavigationContainer>
-//       <StackActions.Navigator>
-//         <Stack.Screen name="login" component={NSmanViewPage} />
-//       </StackActions.Navigator>
-//     </NavigationContainer>
-//   );
-// };
+import NSmanViewPage from "./NSmanViewPage";
+("./NSmanViewPage");
 
-export default function App() {
+function LoginPage() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <FontAwesome name="user-circle-o" size={100} color="black" />
       <Text style={{ fontSize: 40 }}>Login</Text>
-      <StatusBar style="auto" />
       <TextInput
         style={{
           height: 40,
@@ -49,12 +34,26 @@ export default function App() {
           marginLeft: 10,
           marginTop: 20,
           backgroundColor: "lightgray",
+          color: "black",
+          textDecorationColor: "black",
           padding: 20,
           borderWidth: 1,
         }}
         placeholder="Password              "
       />
-      <TouchableOpacity onPress={buttonPressed} style={styles.button}>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Logout");
+          // NSmanViewPage.navigationOptions = {
+          //   headerTitle: "Kilometers",
+          //   headerLeft: () => {
+          //     return null;
+          //   },
+          // };
+        }}
+        style={styles.button}
+      >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
@@ -93,3 +92,17 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+const Stack = createStackNavigator();
+
+export default function NsStack() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="NsScreen" component={LoginPage} />
+        {/* <Stack.Screen name="SupervisorScreen" component={SupervisorHistory} /> */}
+        <Stack.Screen name="Logout" component={NSmanViewPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
