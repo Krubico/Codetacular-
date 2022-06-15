@@ -6,3 +6,5 @@
 3. run {npm install} to download dependencies
 4. Start the android emulator and Have Fun
 
+
+NOTE: If you are using React-Native Cli: BEFORE RUNNING {npm install}, DELETE EXPO DEPENDENCIES IN package.json 
