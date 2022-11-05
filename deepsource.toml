@@ -3,8 +3,7 @@ version = 1
 test_patterns = ["*/test/**"]
 
 exclude_patterns = [
-    "public/**,",
-    "dist/**"
+    "/"
 ]
 
 [[analyzers]]
